@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-using namespace winrt::Windows::UI::Core;
+using namespace Windows::UI::Core;
 namespace RDDLib
 {
 	namespace pdfv

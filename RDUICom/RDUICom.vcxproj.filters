@@ -38,6 +38,9 @@
     <ClCompile Include="PDFPageTag.cpp" />
     <ClCompile Include="RDSoftBmp.cpp" />
     <ClCompile Include="RDBmp.cpp" />
+    <ClCompile Include="DOCXDoc.cpp" />
+    <ClCompile Include="DOCXPage.cpp" />
+    <ClCompile Include="DOCXFinder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -69,6 +72,9 @@
     <ClInclude Include="PDFPageTag.h" />
     <ClInclude Include="RDSoftBmp.h" />
     <ClInclude Include="RDBmp.h" />
+    <ClInclude Include="DOCXDoc.h" />
+    <ClInclude Include="DOCXPage.h" />
+    <ClInclude Include="DOCXFinder.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RDUICom.def" />
@@ -106,5 +112,8 @@
     <Midl Include="PDFPageTag.idl" />
     <Midl Include="RDSoftBmp.idl" />
     <Midl Include="RDBmp.idl" />
+    <Midl Include="DOCXDoc.idl" />
+    <Midl Include="DOCXPage.idl" />
+    <Midl Include="DOCXFinder.idl" />
   </ItemGroup>
 </Project>

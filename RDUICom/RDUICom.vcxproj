@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.props" Condition="Exists('packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.props')" />
   <Import Project="packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.props" Condition="Exists('packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.props')" />
@@ -143,6 +143,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DOCXDoc.h" />
+    <ClInclude Include="DOCXFinder.h" />
+    <ClInclude Include="DOCXPage.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PDFAnnot.h" />
     <ClInclude Include="PDFDoc.h">
@@ -177,6 +180,9 @@
     <ClInclude Include="UIPDF.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DOCXDoc.cpp" />
+    <ClCompile Include="DOCXFinder.cpp" />
+    <ClCompile Include="DOCXPage.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -209,6 +215,9 @@
     <ClCompile Include="RDSoftBmp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Midl Include="DOCXDoc.idl" />
+    <Midl Include="DOCXFinder.idl" />
+    <Midl Include="DOCXPage.idl" />
     <Midl Include="PDFAnnot.idl" />
     <Midl Include="PDFDoc.idl">
       <SubType>Code</SubType>

@@ -1,0 +1,27 @@
+import "RDGlobal.idl";
+import "RDDIB.idl";
+import "DOCXFinder.idl";
+
+namespace RDUILib
+{
+    [default_interface]
+    runtimeclass DOCXPage
+    {
+        DOCXPage(Int64 hand);
+        Int64 Handle{ get; };
+        DOCXFinder GetFinder(String key, Boolean match_case, Boolean whole_word);
+        DOCXFinder GetFinder(String key, Boolean match_case, Boolean whole_word, Boolean skip_blanks);
+        String GetHLink(Single x, Single y);
+        Int32 ObjsAlignWord(Int32 index, Int32 dir);
+        Int32 ObjsGetCharCount();
+        Int32 ObjsGetCharIndex(Single x, Single y);
+        RDRect ObjsGetCharRect(Int32 index);
+        String ObjsGetString(Int32 from, Int32 to);
+        void ObjsStart();
+        Boolean Render(RDDIB dib, Single scale, Int32 orgx, Int32 orgy, Int32 quality);
+        void RenderCancel();
+        Boolean RenderIsFinished();
+        void RenderPrepare();
+        void RenderPrepare(RDDIB dib);
+    }
+}

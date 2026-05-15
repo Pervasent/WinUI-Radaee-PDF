@@ -1,0 +1,19 @@
+import "RDGlobal.idl";
+import "PDFDoc.idl";
+import "DOCXPage.idl";
+
+namespace RDUILib
+{
+    [default_interface]
+    runtimeclass DOCXDoc
+    {
+        DOCXDoc();
+        Int32 OpenPath(String path, String password);
+        Int32 Open(Windows.Storage.Streams.IRandomAccessStream stream, String password);
+        Single GetPageWidth(Int32 pageno);
+        Single GetPageHeight(Int32 pageno);
+        Boolean ExportPDF(PDFDoc pdf);
+        DOCXPage GetPage(Int32 pageno);
+        void Close();
+    }
+}

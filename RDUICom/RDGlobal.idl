@@ -1,9 +1,18 @@
 namespace RDUILib
 {
+    interface IRDVDelegate
+    {
+        void vpDrawSelRect(Single left, Single top, Single right, Single bottom);
+        void vpDrawMarkRect(Single left, Single top, Single right, Single bottom);
+        void vpOnFound(Boolean found);
+        void vpShowBlock(Microsoft.UI.Xaml.Controls.Image img, Single x, Single y, Single w, Single h);
+        void vpRemoveBlock(Microsoft.UI.Xaml.Controls.Image img);
+    };
     interface IRDDelegate
     {
 		Microsoft.UI.Xaml.Media.Imaging.WriteableBitmap OnCreateBitmap(Int32 width, Int32 height);
         Windows.Storage.Streams.IBuffer OnGetBitmapBuffer(Microsoft.UI.Xaml.Media.Imaging.WriteableBitmap bmp);
+        Microsoft.UI.Xaml.Controls.Image OnMakeImage(Microsoft.UI.Xaml.Media.Imaging.WriteableBitmap bmp);
     };
     struct RDPoint
     {
@@ -34,6 +43,5 @@ namespace RDUILib
         static Boolean SetAnnotFont(String name);
         static void SetAnnotTransparence(UInt32 color);
         static void LoadStdFont(Int32 index, String path);
-        //static Boolean DrawDash(float[] dash, int dashCount, WriteableBitmap dib);
     }
 }

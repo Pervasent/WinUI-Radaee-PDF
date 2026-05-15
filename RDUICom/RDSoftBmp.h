@@ -24,6 +24,10 @@ namespace winrt::RDUILib::implementation
                 m_dib = nullptr;
             }
         }
+        winrt::Windows::Graphics::Imaging::SoftwareBitmap Data()
+        {
+            return m_dib;
+        }
         int64_t Handle()
         {
             return (int64_t)m_bmp;

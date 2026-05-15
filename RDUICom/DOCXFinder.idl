@@ -1,0 +1,12 @@
+namespace RDUILib
+{
+    [default_interface]
+    runtimeclass DOCXFinder
+    {
+        DOCXFinder(Int64 hand);
+        Int64 Handle{ get; };
+        Int32 GetCount();
+        Int32 GetFirstChar(Int32 index);
+        Int32 GetLastChar(Int32 index);
+    }
+}

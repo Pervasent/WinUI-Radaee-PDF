@@ -6,6 +6,7 @@ namespace RDUILib
     {
 		RDSoftBmp(Int32 w, Int32 h);
         Int64 Handle{ get; };
+		Windows.Graphics.Imaging.SoftwareBitmap Data{ get; };
 		Boolean SaveJPG(String path, Int32 quality);
 		void Reset(UInt32 color);
 		void DrawDIB(RDDIB src, Int32 x, Int32 y);

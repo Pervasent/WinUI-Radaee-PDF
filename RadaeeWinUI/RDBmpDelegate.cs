@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Media.Imaging;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media.Imaging;
 using RDUILib;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,13 @@ namespace RadaeeWinUI
         public IBuffer OnGetBitmapBuffer(WriteableBitmap bmp)
         {
             return bmp.PixelBuffer;
+        }
+
+        public Image OnMakeImage(WriteableBitmap bmp)
+        {
+            Image image = new Image();
+            image.Source = bmp;
+            return image;
         }
     }
 }

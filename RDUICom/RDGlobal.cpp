@@ -90,9 +90,4 @@ namespace winrt::RDUILib::implementation
         ::WideCharToMultiByte(CP_ACP, 0, path.c_str(), -1, cname, 511, NULL, NULL);
         Global_loadStdFont(index, cname);
     }
-
-    /*bool RDGlobal::DrawDash(float[] dash, int dashCount, WriteableBitmap dib)
-    {
-        return Global_drawDashLine(dash, dashCount, dib);
-    }*/
 }

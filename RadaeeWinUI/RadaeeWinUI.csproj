@@ -22,6 +22,8 @@
 
     <EnableMsixTooling>true</EnableMsixTooling>
 
+    <WindowsPackageType>MSIX</WindowsPackageType>
+
     <Nullable>enable</Nullable>
 
     <CsWinRTEnabled>true</CsWinRTEnabled>

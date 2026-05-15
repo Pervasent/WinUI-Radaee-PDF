@@ -4,7 +4,7 @@
 #include "RDPDFVThread.h"
 using namespace RDDLib::pdfv;
 int CRDVBlk::m_cell_size = 0;
-RDSoftBmp^ CRDVBlk::m_def_bmp = nullptr;
+RDBmp^ CRDVBlk::m_def_bmp = nullptr;
 
 
 void CRDVThread::render_start(CRDVBlk* blk)

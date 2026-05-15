@@ -21,7 +21,6 @@ namespace winrt::RDUILib::implementation
         static bool SetAnnotFont(winrt::hstring name);
         static void SetAnnotTransparence(uint32_t color);
         static void LoadStdFont(int32_t index, winrt::hstring path);
-        //static bool DrawDash(float[] dash, int dashCount, WriteableBitmap dib);
     };
 }
 

@@ -38,6 +38,10 @@ namespace winrt::RDUILib::implementation
             WideCharToMultiByte(CP_ACP, 0, path.c_str(), -1, stxt, 511, NULL, NULL);
             return Global_saveBitmapJPG((PDF_BMP)&m_bmp, stxt, quality);
         }
+        Microsoft::UI::Xaml::Media::Imaging::WriteableBitmap Data()
+        {
+            return m_dib;
+        }
         void Reset(uint32_t color)
         {
             Global_eraseColor((PDF_BMP)&m_bmp, color);
