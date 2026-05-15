@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml;
+using RDUILib;
 using RadaeeWinUI.Models;
 using RadaeeWinUI.RadaeeUtil;
 using RadaeeWinUI.ViewModels;
@@ -32,7 +33,7 @@ namespace RadaeeWinUI
             SearchToolbar.CloseRequested += (s, e) =>
             {
                 SearchToolbar.Visibility = Visibility.Collapsed;
-                if (ViewModel.IsDocumentLoaded)
+                if (ViewModel.IsDocumentLoaded && ViewModel.CurrentDocumentType == DocumentType.PDF)
                 {
                     AnnotationToolbar.Visibility = Visibility.Visible;
                 }
@@ -40,12 +41,13 @@ namespace RadaeeWinUI
 
             ViewModel.PropertyChanged += ViewModel_PropertyChanged;
             ViewModel.PDFViewModel.PropertyChanged += PDFViewModel_PropertyChanged;
+            ViewModel.DOCXViewModel.PropertyChanged += DOCXViewModel_PropertyChanged;
             UpdateUI();
         }
 
         private bool initLib()
         {
-            return RDGlobal.init();
+            return RadaeeUtil.RDGlobal.init();
         }
 
         private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -58,7 +60,7 @@ namespace RadaeeWinUI
                         UpdateUI();
                         if (ViewModel.IsDocumentLoaded)
                         {
-                            InitializePDFView();
+                            InitializeDocumentView();
                         }
                         break;
                     case nameof(ViewModel.CurrentPageNumber):
@@ -79,8 +81,6 @@ namespace RadaeeWinUI
             if (ViewModel.IsDocumentLoaded)
             {
                 EmptyMessage.Visibility = Visibility.Collapsed;
-                AnnotationToolbar.Visibility = Visibility.Visible;
-                PDFViewContainer.Visibility = Visibility.Visible;
                 PageNumberText.Text = ViewModel.CurrentPageNumber.ToString();
                 TotalPagesText.Text = ViewModel.TotalPages.ToString();
                 UpdateZoomLevel();
@@ -90,6 +90,7 @@ namespace RadaeeWinUI
                 EmptyMessage.Visibility = Visibility.Visible;
                 AnnotationToolbar.Visibility = Visibility.Collapsed;
                 PDFViewContainer.Visibility = Visibility.Collapsed;
+                DOCXViewContainer.Visibility = Visibility.Collapsed;
                 PageNumberText.Text = "0";
                 TotalPagesText.Text = "0";
                 ZoomLevelText.Text = "100%";
@@ -98,9 +99,14 @@ namespace RadaeeWinUI
 
         private void UpdateZoomLevel()
         {
-            if (ViewModel.PDFViewModel.CurrentPDFView != null)
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF && ViewModel.PDFViewModel.CurrentPDFView != null)
             {
                 float zoomLevel = ViewModel.PDFViewModel.CurrentPDFView.ZoomLevel;
+                ZoomLevelText.Text = $"{(int)(zoomLevel * 100)}%";
+            }
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX && ViewModel.DOCXViewModel.CurrentDOCXView != null)
+            {
+                float zoomLevel = ViewModel.DOCXViewModel.CurrentDOCXView.ZoomLevel;
                 ZoomLevelText.Text = $"{(int)(zoomLevel * 100)}%";
             }
             else
@@ -109,36 +115,53 @@ namespace RadaeeWinUI
             }
         }
 
-        private void InitializePDFView()
+        private void InitializeDocumentView()
         {
             if (!ViewModel.IsDocumentLoaded)
                 return;
 
             var doc = ViewModel.GetCurrentDocument();
-            if (doc != null)
+            if (doc == null)
+                return;
+
+            if (doc.Type == DocumentType.PDF)
             {
+                ViewModel.DOCXViewModel.OnDocumentClosed();
                 ViewModel.PDFViewModel.SwitchViewMode(ViewMode.SinglePage);
                 PDFViewContainer.Content = ViewModel.PDFViewModel.CurrentPDFView;
+                PDFViewContainer.Visibility = Visibility.Visible;
+                DOCXViewContainer.Visibility = Visibility.Collapsed;
+                AnnotationToolbar.Visibility = Visibility.Visible;
+                BtnSearch.Visibility = Visibility.Visible;
 
-                if (doc.GetRootOutline() != null)
+                if (doc is PDFDocumentWrapper pdfWrapper)
                 {
-                    BtnOutline.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    BtnOutline.Visibility = Visibility.Collapsed;
+                    PDFDoc pdfDoc = pdfWrapper.InnerDoc;
+                    BtnOutline.Visibility = pdfDoc.GetRootOutline() != null ? Visibility.Visible : Visibility.Collapsed;
                 }
 
                 UpdateAttachmentButtonVisibility();
+            }
+            else if (doc.Type == DocumentType.DOCX)
+            {
+                ViewModel.DOCXViewModel.SwitchViewMode(ViewMode.SinglePage);
+                DOCXViewContainer.Content = ViewModel.DOCXViewModel.CurrentDOCXView;
+                DOCXViewContainer.Visibility = Visibility.Visible;
+                PDFViewContainer.Visibility = Visibility.Collapsed;
+                AnnotationToolbar.Visibility = Visibility.Collapsed;
+                SearchToolbar.Visibility = Visibility.Collapsed;
+                BtnOutline.Visibility = Visibility.Collapsed;
+                BtnAttachment.Visibility = Visibility.Collapsed;
+                BtnSearch.Visibility = Visibility.Collapsed;
             }
         }
 
         private async void ShowPDFOutline()
         {
             var doc = ViewModel.GetCurrentDocument();
-            if (doc != null)
+            if (doc is PDFDocumentWrapper pdfWrapper)
             {
-                var outline = doc.GetRootOutline();
+                var outline = pdfWrapper.InnerDoc.GetRootOutline();
                 if (outline != null)
                 {
                     var dialog = new OutlineDialog();
@@ -166,6 +189,18 @@ namespace RadaeeWinUI
             });
         }
 
+        private void DOCXViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (e.PropertyName == nameof(ViewModel.DOCXViewModel.CurrentDOCXView))
+                {
+                    DOCXViewContainer.Content = ViewModel.DOCXViewModel.CurrentDOCXView;
+                    UpdateZoomLevel();
+                }
+            });
+        }
+
         private async void OpenDocument_Click(object sender, RoutedEventArgs e)
         {
             await ViewModel.OpenDocumentAsync();
@@ -183,53 +218,84 @@ namespace RadaeeWinUI
 
         private void ZoomIn_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.PDFViewModel.CurrentPDFView != null)
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF && ViewModel.PDFViewModel.CurrentPDFView != null)
             {
                 float currentZoom = ViewModel.PDFViewModel.CurrentPDFView.ZoomLevel;
                 float newZoom = Math.Min(currentZoom * 1.2f, 5.0f);
                 ViewModel.PDFViewModel.CurrentPDFView.vSetZoom(newZoom);
                 UpdateZoomLevel();
             }
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX && ViewModel.DOCXViewModel.CurrentDOCXView != null)
+            {
+                float currentZoom = ViewModel.DOCXViewModel.CurrentDOCXView.ZoomLevel;
+                float newZoom = Math.Min(currentZoom * 1.2f, 5.0f);
+                ViewModel.DOCXViewModel.CurrentDOCXView.vSetZoom(newZoom);
+                UpdateZoomLevel();
+            }
         }
 
         private void ZoomOut_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.PDFViewModel.CurrentPDFView != null)
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF && ViewModel.PDFViewModel.CurrentPDFView != null)
             {
                 float currentZoom = ViewModel.PDFViewModel.CurrentPDFView.ZoomLevel;
                 float newZoom = Math.Max(currentZoom / 1.2f, 0.5f);
                 ViewModel.PDFViewModel.CurrentPDFView.vSetZoom(newZoom);
                 UpdateZoomLevel();
             }
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX && ViewModel.DOCXViewModel.CurrentDOCXView != null)
+            {
+                float currentZoom = ViewModel.DOCXViewModel.CurrentDOCXView.ZoomLevel;
+                float newZoom = Math.Max(currentZoom / 1.2f, 0.5f);
+                ViewModel.DOCXViewModel.CurrentDOCXView.vSetZoom(newZoom);
+                UpdateZoomLevel();
+            }
         }
 
         private void FitWidth_Click(object sender, RoutedEventArgs e)
         {
-            if (ViewModel.PDFViewModel.CurrentPDFView != null)
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF && ViewModel.PDFViewModel.CurrentPDFView != null)
             {
                 ViewModel.PDFViewModel.CurrentPDFView.vSetZoom(1.0f);
+                UpdateZoomLevel();
+            }
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX && ViewModel.DOCXViewModel.CurrentDOCXView != null)
+            {
+                ViewModel.DOCXViewModel.CurrentDOCXView.vSetZoom(1.0f);
                 UpdateZoomLevel();
             }
         }
 
         private void ViewMode_SinglePage_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.PDFViewModel.SwitchViewMode(ViewMode.SinglePage);
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF)
+                ViewModel.PDFViewModel.SwitchViewMode(ViewMode.SinglePage);
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX)
+                ViewModel.DOCXViewModel.SwitchViewMode(ViewMode.SinglePage);
         }
 
         private void ViewMode_VerticalContinuous_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.PDFViewModel.SwitchViewMode(ViewMode.VerticalContinuous);
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF)
+                ViewModel.PDFViewModel.SwitchViewMode(ViewMode.VerticalContinuous);
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX)
+                ViewModel.DOCXViewModel.SwitchViewMode(ViewMode.VerticalContinuous);
         }
 
         private void ViewMode_HorizontalContinuous_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.PDFViewModel.SwitchViewMode(ViewMode.HorizontalContinuous);
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF)
+                ViewModel.PDFViewModel.SwitchViewMode(ViewMode.HorizontalContinuous);
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX)
+                ViewModel.DOCXViewModel.SwitchViewMode(ViewMode.HorizontalContinuous);
         }
 
         private void ViewMode_DualPage_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.PDFViewModel.SwitchViewMode(ViewMode.DualPageContinuous);
+            if (ViewModel.CurrentDocumentType == DocumentType.PDF)
+                ViewModel.PDFViewModel.SwitchViewMode(ViewMode.DualPageContinuous);
+            else if (ViewModel.CurrentDocumentType == DocumentType.DOCX)
+                ViewModel.DOCXViewModel.SwitchViewMode(ViewMode.DualPage);
         }
 
         private void Outline_Click(object sender, RoutedEventArgs e)
@@ -245,26 +311,26 @@ namespace RadaeeWinUI
         private async void Attachment_Click(object sender, RoutedEventArgs e)
         {
             var doc = ViewModel.GetCurrentDocument();
-            if (doc != null)
+            if (doc is PDFDocumentWrapper pdfWrapper)
             {
                 var dialog = new AttachmentListDialog
                 {
                     XamlRoot = this.Content.XamlRoot
                 };
-                dialog.LoadAttachments(doc);
+                dialog.LoadAttachments(pdfWrapper.InnerDoc);
                 await dialog.ShowAsync();
-
-
-
-                ViewModel.GetCurrentDocument();
             }
         }
 
         private void Search_Click(object sender, RoutedEventArgs e)
         {
+            if (ViewModel.CurrentDocumentType != DocumentType.PDF)
+                return;
+
             if (SearchToolbar.Visibility == Visibility.Visible)
             {
                 SearchToolbar.Visibility = Visibility.Collapsed;
+                AnnotationToolbar.Visibility = Visibility.Visible;
             }
             else
             {

@@ -2,6 +2,7 @@ namespace RadaeeWinUI.Models
 {
     public class DocumentInfo
     {
+        public DocumentType Type { get; set; }
         public string FilePath { get; set; } = string.Empty;
         public int PageCount { get; set; }
         public bool IsEncrypted { get; set; }

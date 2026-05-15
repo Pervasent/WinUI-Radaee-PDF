@@ -14,8 +14,10 @@ namespace RadaeeWinUI.ViewModels
         private readonly IDocumentManager _documentManager;
         private readonly INavigationService _navigationService;
         private readonly PDFViewModel _pdfViewModel;
+        private readonly DOCXViewModel _docxViewModel;
 
-        private PDFDoc? _currentDocument;
+        private IDocument? _currentDocument;
+        private DocumentType _currentDocumentType;
         private DocumentInfo? _documentInfo;
         private bool _isDocumentLoaded;
         private bool _hasAttachments;
@@ -23,13 +25,16 @@ namespace RadaeeWinUI.ViewModels
         public MainViewModel(
             IDocumentManager documentManager,
             INavigationService navigationService,
-            PDFViewModel pdfViewModel)
+            PDFViewModel pdfViewModel,
+            DOCXViewModel docxViewModel)
         {
             _documentManager = documentManager;
             _navigationService = navigationService;
             _pdfViewModel = pdfViewModel;
+            _docxViewModel = docxViewModel;
 
             _pdfViewModel.CurrentPageChanged += _pdfPageChanged;
+            _docxViewModel.CurrentPageChanged += _docxPageChanged;
 
             OpenDocumentCommand = new AsyncRelayCommand(OpenDocumentAsync);
             NextPageCommand = new AsyncRelayCommand(GoToNextPageAsync, () => _navigationService.CanGoToNextPage);
@@ -40,7 +45,12 @@ namespace RadaeeWinUI.ViewModels
         {
             _navigationService.GoToPage(e.NewPageIndex);
             OnPropertyChanged(nameof(CurrentPageNumber));
+        }
 
+        private void _docxPageChanged(object? sender, PageChangedEventArgs e)
+        {
+            _navigationService.GoToPage(e.NewPageIndex);
+            OnPropertyChanged(nameof(CurrentPageNumber));
         }
 
         public AsyncRelayCommand OpenDocumentCommand { get; }
@@ -48,6 +58,13 @@ namespace RadaeeWinUI.ViewModels
         public AsyncRelayCommand PreviousPageCommand { get; }
 
         public PDFViewModel PDFViewModel => _pdfViewModel;
+        public DOCXViewModel DOCXViewModel => _docxViewModel;
+
+        public DocumentType CurrentDocumentType
+        {
+            get => _currentDocumentType;
+            private set => SetProperty(ref _currentDocumentType, value);
+        }
 
         public DocumentInfo? DocumentInfo
         {
@@ -77,7 +94,9 @@ namespace RadaeeWinUI.ViewModels
             {
                 if (_currentDocument == null || !_currentDocument.IsOpened)
                     return null;
-                return _currentDocument.GetPage(_navigationService.CurrentPageIndex);
+                if (_currentDocument is PDFDocumentWrapper pdfWrapper)
+                    return pdfWrapper.InnerDoc.GetPage(_navigationService.CurrentPageIndex);
+                return null;
             }
         }
 
@@ -88,6 +107,7 @@ namespace RadaeeWinUI.ViewModels
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
             };
             picker.FileTypeFilter.Add(".pdf");
+            picker.FileTypeFilter.Add(".docx");
 
             var window = App.MainWindow;
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
@@ -103,40 +123,70 @@ namespace RadaeeWinUI.ViewModels
         private async Task LoadDocumentAsync(StorageFile file, string password = "")
         {
             _pdfViewModel.OnDocumentClosed();
+            _docxViewModel.OnDocumentClosed();
             _documentManager.CloseDocument(_currentDocument);
 
             _currentDocument = await _documentManager.OpenDocumentAsync(file, password);
 
             if (_currentDocument != null)
             {
+                CurrentDocumentType = _currentDocument.Type;
                 DocumentInfo = _documentManager.GetDocumentInfo(_currentDocument);
                 _navigationService.SetTotalPages(DocumentInfo?.PageCount ?? 0);
                 _navigationService.GoToPage(0);
                 IsDocumentLoaded = true;
 
-                _pdfViewModel.OnDocumentLoaded(_currentDocument);
+                if (_currentDocumentType == DocumentType.PDF && _currentDocument is PDFDocumentWrapper pdfWrapper)
+                {
+                    _pdfViewModel.OnDocumentLoaded(pdfWrapper.InnerDoc);
+                    UpdateAttachmentStatus();
+                }
+                else if (_currentDocumentType == DocumentType.DOCX)
+                {
+                    _docxViewModel.OnDocumentLoaded(_currentDocument);
+                    HasAttachments = false;
+                }
 
                 OnPropertyChanged(nameof(CurrentPageNumber));
                 OnPropertyChanged(nameof(TotalPages));
                 UpdateNavigationCommands();
-                UpdateAttachmentStatus();
             }
         }
 
 
+        private ViewMode GetActiveViewMode()
+        {
+            if (_currentDocumentType == DocumentType.PDF)
+                return _pdfViewModel.ViewMode;
+            else
+                return _docxViewModel.ViewMode;
+        }
+
+        private void NavigateActiveView(int pageIndex)
+        {
+            if (_currentDocumentType == DocumentType.PDF)
+            {
+                if (_pdfViewModel.CurrentPDFView != null)
+                    _pdfViewModel.CurrentPDFView.vPageGoto(pageIndex);
+            }
+            else if (_currentDocumentType == DocumentType.DOCX)
+            {
+                if (_docxViewModel.CurrentDOCXView != null)
+                    _docxViewModel.CurrentDOCXView.vPageGoto(pageIndex);
+            }
+        }
+
         private async Task GoToNextPageAsync()
         {
-            int step = (_pdfViewModel.ViewMode == ViewMode.DualPage || _pdfViewModel.ViewMode == ViewMode.DualPageContinuous) ? 2 : 1;
+            var activeMode = GetActiveViewMode();
+            int step = (activeMode == ViewMode.DualPage || activeMode == ViewMode.DualPageContinuous) ? 2 : 1;
 
             int targetPage = _navigationService.CurrentPageIndex + step;
             if (targetPage < _navigationService.TotalPages)
             {
                 if (_navigationService.GoToPage(targetPage))
                 {
-                    if (_pdfViewModel.CurrentPDFView != null)
-                    {
-                        _pdfViewModel.CurrentPDFView.vPageGoto(_navigationService.CurrentPageIndex);
-                    }
+                    NavigateActiveView(_navigationService.CurrentPageIndex);
                     OnPropertyChanged(nameof(CurrentPageNumber));
                     UpdateNavigationCommands();
                 }
@@ -146,17 +196,15 @@ namespace RadaeeWinUI.ViewModels
 
         private async Task GoToPreviousPageAsync()
         {
-            int step = (_pdfViewModel.ViewMode == ViewMode.DualPage || _pdfViewModel.ViewMode == ViewMode.DualPageContinuous) ? 2 : 1;
+            var activeMode = GetActiveViewMode();
+            int step = (activeMode == ViewMode.DualPage || activeMode == ViewMode.DualPageContinuous) ? 2 : 1;
 
             int targetPage = _navigationService.CurrentPageIndex - step;
             if (targetPage >= 0)
             {
                 if (_navigationService.GoToPage(targetPage))
                 {
-                    if (_pdfViewModel.CurrentPDFView != null)
-                    {
-                        _pdfViewModel.CurrentPDFView.vPageGoto(_navigationService.CurrentPageIndex);
-                    }
+                    NavigateActiveView(_navigationService.CurrentPageIndex);
                     OnPropertyChanged(nameof(CurrentPageNumber));
                     UpdateNavigationCommands();
                 }
@@ -168,10 +216,7 @@ namespace RadaeeWinUI.ViewModels
         {
             if (_navigationService.GoToPage(pageIndex))
             {
-                if (_pdfViewModel.CurrentPDFView != null)
-                {
-                    _pdfViewModel.CurrentPDFView.vPageGoto(_navigationService.CurrentPageIndex);
-                }
+                NavigateActiveView(_navigationService.CurrentPageIndex);
                 OnPropertyChanged(nameof(CurrentPageNumber));
                 UpdateNavigationCommands();
             }
@@ -186,19 +231,20 @@ namespace RadaeeWinUI.ViewModels
         public void Cleanup()
         {
             _pdfViewModel.OnDocumentClosed();
+            _docxViewModel.OnDocumentClosed();
             _documentManager.CloseDocument(_currentDocument);
         }
 
-        public PDFDoc? GetCurrentDocument()
+        public IDocument? GetCurrentDocument()
         {
             return _currentDocument;
         }
 
         private void UpdateAttachmentStatus()
         {
-            if (_currentDocument != null && _currentDocument.IsOpened)
+            if (_currentDocument is PDFDocumentWrapper pdfWrapper && pdfWrapper.IsOpened)
             {
-                int efCount = _currentDocument.EFCount;
+                int efCount = pdfWrapper.InnerDoc.EFCount;
                 HasAttachments = efCount > 0;
             }
             else

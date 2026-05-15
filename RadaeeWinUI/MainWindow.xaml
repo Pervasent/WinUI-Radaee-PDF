@@ -10,7 +10,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Radaee PDF Viewer">
+    Title="Radaee Document Viewer">
 
 
 
@@ -35,7 +35,7 @@
             <AppBarButton x:Name="BtnOutline" Icon="OutlineStar" Label="Outline" Click="Outline_Click" Visibility="Collapsed"/>
             <AppBarButton x:Name="BtnAttachment" Icon="Attach" Label="Attachment" Click="Attachment_Click" Visibility="Collapsed"/>
             <AppBarSeparator/>
-            <AppBarButton Icon="Find" Label="Search" Click="Search_Click"/>
+            <AppBarButton x:Name="BtnSearch" Icon="Find" Label="Search" Click="Search_Click"/>
             <AppBarButton Label="View Mode">
                 <AppBarButton.Flyout>
                     <MenuFlyout>
@@ -53,15 +53,18 @@
 
         <Grid Grid.Row="2">
             <TextBlock x:Name="EmptyMessage"
-                       Text="Open a PDF document to start viewing"
+                       Text="Open a PDF or DOCX document to start viewing"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        FontSize="20"
                        Foreground="Gray"/>
 
-
-
             <ContentControl x:Name="PDFViewContainer"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            Visibility="Collapsed"/>
+
+            <ContentControl x:Name="DOCXViewContainer"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
                             Visibility="Collapsed"/>

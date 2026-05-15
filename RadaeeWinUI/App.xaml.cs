@@ -28,8 +28,10 @@ namespace RadaeeWinUI
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<ILayoutManager, LayoutManager>();
             services.AddSingleton<IAnnotationManager, AnnotationManager>();
+            services.AddSingleton<IDOCXRenderService, DOCXRenderService>();
 
             services.AddSingleton<PDFViewModel>();
+            services.AddSingleton<DOCXViewModel>();
             services.AddSingleton<MainViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();

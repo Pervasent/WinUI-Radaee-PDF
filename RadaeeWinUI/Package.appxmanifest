@@ -79,6 +79,9 @@
         <ActivatableClass ActivatableClassId="RDUILib.RDMatrix" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="RDUILib.RDPath" ThreadingModel="both" />
         <ActivatableClass ActivatableClassId="RDUILib.RDSoftBmp" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="RDUILib.DOCXDoc" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="RDUILib.DOCXPage" ThreadingModel="both" />
+        <ActivatableClass ActivatableClassId="RDUILib.DOCXFinder" ThreadingModel="both" />
       </InProcessServer>
     </Extension>
   </Extensions>
