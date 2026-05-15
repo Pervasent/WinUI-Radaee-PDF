@@ -279,7 +279,31 @@ namespace RadaeeWinUI.Services
             if (_totalPages == 0)
                 return (0, 0);
 
-            if (!_pageSizes.TryGetValue(0, out var leftSize))
+            // Find the actual left page index from registered page sizes
+            int leftIdx = -1;
+            foreach (var key in _pageSizes.Keys)
+            {
+                if (key % 2 == 0)
+                {
+                    leftIdx = key;
+                    break;
+                }
+            }
+            if (leftIdx < 0)
+            {
+                // Fallback: use first registered page
+                foreach (var key in _pageSizes.Keys)
+                {
+                    leftIdx = key;
+                    break;
+                }
+            }
+            if (leftIdx < 0)
+                return (_containerWidth, _containerHeight);
+
+            int rightIdx = leftIdx + 1;
+
+            if (!_pageSizes.TryGetValue(leftIdx, out var leftSize))
             {
                 leftSize = (612, 792);
             }
@@ -287,9 +311,9 @@ namespace RadaeeWinUI.Services
             double maxHeight = leftSize.height;
             double totalWidth = leftSize.width;
 
-            if (_totalPages > 1)
+            if (rightIdx < _totalPages)
             {
-                if (!_pageSizes.TryGetValue(1, out var rightSize))
+                if (!_pageSizes.TryGetValue(rightIdx, out var rightSize))
                 {
                     rightSize = (612, 792);
                 }
@@ -381,15 +405,18 @@ namespace RadaeeWinUI.Services
             if (pageIndex < 0 || pageIndex >= _totalPages)
                 return (0, 0);
 
-            if (!_pageSizes.TryGetValue(0, out var leftSize))
+            int leftIdx = (pageIndex / 2) * 2;
+            int rightIdx = leftIdx + 1;
+
+            if (!_pageSizes.TryGetValue(leftIdx, out var leftSize))
             {
                 leftSize = (612, 792);
             }
 
             double totalWidth = leftSize.width;
-            if (_totalPages > 1)
+            if (rightIdx < _totalPages)
             {
-                if (!_pageSizes.TryGetValue(1, out var rightSize))
+                if (!_pageSizes.TryGetValue(rightIdx, out var rightSize))
                 {
                     rightSize = (612, 792);
                 }
@@ -399,16 +426,14 @@ namespace RadaeeWinUI.Services
             double startX = (_containerWidth - totalWidth) / 2;
             double y = 0;
 
-            if (pageIndex == 0)
+            if (pageIndex % 2 == 0)
             {
                 return (startX, y);
             }
-            else if (pageIndex == 1 && _totalPages > 1)
+            else
             {
                 return (startX + leftSize.width + _pageSpacing, y);
             }
-
-            return (0, 0);
         }
 
         private (double x, double y) GetDualPageContinuousPosition(int pageIndex)
