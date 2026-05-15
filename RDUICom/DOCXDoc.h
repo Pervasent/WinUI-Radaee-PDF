@@ -29,6 +29,10 @@ namespace winrt::RDUILib::implementation
             m_doc = DOCX_Document_open(stream, password, &err);
             return err;
         }
+        int32_t PageCount()
+        {
+            return DOCX_Document_getPageCount(m_doc);
+        }
         void Close()
         {
             if (m_doc)

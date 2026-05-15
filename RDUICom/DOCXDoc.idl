@@ -10,6 +10,7 @@ namespace RDUILib
         DOCXDoc();
         Int32 OpenPath(String path, String password);
         Int32 Open(Windows.Storage.Streams.IRandomAccessStream stream, String password);
+        Int32 PageCount{ get; };
         Single GetPageWidth(Int32 pageno);
         Single GetPageHeight(Int32 pageno);
         Boolean ExportPDF(PDFDoc pdf);
