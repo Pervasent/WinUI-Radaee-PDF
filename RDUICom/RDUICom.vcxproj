@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <Import Project="packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.props" Condition="Exists('packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.props')" />
   <Import Project="packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.props" Condition="Exists('packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.props')" />
   <Import Project="packages\Microsoft.ProjectReunion.0.8.12\build\native\Microsoft.ProjectReunion.props" Condition="Exists('packages\Microsoft.ProjectReunion.0.8.12\build\native\Microsoft.ProjectReunion.props')" />
   <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.props')" />
+  <Import Project="..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.props" Condition="Exists('..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.props')" />
   <PropertyGroup Label="Globals">
     <CppWinRTOptimized>true</CppWinRTOptimized>
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
@@ -105,7 +107,7 @@
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">false</BufferSecurityCheck>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</BufferSecurityCheck>
     </ClCompile>
-    <Link>
+    <!-- <Link>
       <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RDUId.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../lib/x64</AdditionalLibraryDirectories>
     </Link>
@@ -116,7 +118,7 @@
     <Link>
       <AdditionalLibraryDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">../lib/arm64</AdditionalLibraryDirectories>
       <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|arm64'">RDUId.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
+    </Link> -->
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
@@ -263,10 +265,12 @@
     <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.targets')" />
     <Import Project="packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.targets" Condition="Exists('packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.targets')" />
     <Import Project="packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets" Condition="Exists('packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets')" />
+    <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
+    <Import Project="..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets" Condition="Exists('..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+      <ErrorText>This computer is missing the NuGet packages referenced by this project. You can download these packages using NuGet Package Restore. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.210211.2\build\native\Microsoft.Windows.CppWinRT.targets'))" />
@@ -275,5 +279,8 @@
     <Error Condition="!Exists('packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.targets'))" />
     <Error Condition="!Exists('packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.props'))" />
     <Error Condition="!Exists('packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+    <Error Condition="!Exists('..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets'))" />
   </Target>
 </Project>
