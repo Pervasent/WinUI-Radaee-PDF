@@ -44,50 +44,20 @@ You must enable Developer Mode on Windows:
 3. Enable **Developer Mode**
    - This allows you to install apps from any source, including loose files
 
-## Git and Git LFS
+## Nuget package
 
 > **Note on Large Library Files**
 > The static library (`*.lib`) files in this repository are very large (several hundred MB each). This is because WinUI Release builds expand all inline functions during compilation, which significantly increases the instruction size and results in much larger static library files.
 >
 > **Important:** These `*.lib` files are only required by the dynamic library project **RDUICom**. Once RDUICom is successfully built, it outputs normal-sized dynamic library files (`*.dll` and `*.winmd`) that are used by the application project **RadaeeWinUI**. When deploying your application, you do **not** need to include the large `*.lib` files—only the compiled `*.dll` and `*.winmd` files are required.
 
-In this case, **Git LFS** is required to handle these large binary files efficiently.
+In this case, we use **Nuget** for publishing and managing the native library files.
 
-All developers **must** have Git LFS correctly installed and configured, both on **Windows** and **macOS**, otherwise the project will not build correctly.
+To successfully extract the compressed native library, 7-zip is required on your local environment. 
 
-### macOS (with Homebrew)
+Beore build the project, please restore the nuget packages first.
 
-```bash
-brew install git-lfs
-git lfs install
-
-git clone git@github.com:RadaeePDF-Jugaad/RadaeePDF-Master-Windows-WinUI.git
-cd RadaeePDF-Master-Windows-WinUI
-
-# From now on, a normal pull will also download/update LFS files (.lib)
-git pull
-```
-
-### Windows
-
-On Windows, install Git LFS using one of the following options:
-
-- **Git for Windows installer** (select “Git LFS” during setup), or  
-- **Chocolatey**:
-
-  ```powershell
-  choco install git-lfs
-  git lfs install
-  ```
-
-  Optional: you can also install Git LFS with winget:
-
-  ```powershell
-  winget install -e --id GitHub.GitLFS
-  git lfs install
-  ```
-
-Then clone the repository:
+## clone the repository:
 
 ```powershell
 git clone git@github.com:RadaeePDF-Jugaad/RadaeePDF-Master-Windows-WinUI.git
@@ -97,7 +67,7 @@ cd RadaeePDF-Master-Windows-WinUI
 git pull
 ```
 
-If you already cloned this repository in the past **without** Git LFS enabled and you are missing `.lib` files, reclone the repository after configuring Git LFS, or contact the maintainer for migration instructions.
+If you already cloned this repository in the past **without** correct nuget dependency added, please re-clone the repository and restore the nuget packages.
 
 ## Quick Start - Run Demo
 
