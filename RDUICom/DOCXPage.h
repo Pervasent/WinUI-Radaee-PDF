@@ -15,7 +15,7 @@ namespace winrt::RDUILib::implementation
         }
 		~DOCXPage()
 		{
-			Close();
+			//Close();
 		}
         int64_t Handle() { return (int64_t)m_hand; }
 		winrt::RDUILib::DOCXFinder GetFinder(winrt::hstring key, bool match_case, bool whole_word)

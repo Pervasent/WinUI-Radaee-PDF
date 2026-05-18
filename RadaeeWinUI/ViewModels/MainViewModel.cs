@@ -134,7 +134,12 @@ namespace RadaeeWinUI.ViewModels
                 DocumentInfo = _documentManager.GetDocumentInfo(_currentDocument);
                 _navigationService.SetTotalPages(DocumentInfo?.PageCount ?? 0);
                 _navigationService.GoToPage(0);
+                bool wasLoaded = _isDocumentLoaded;
                 IsDocumentLoaded = true;
+                if (wasLoaded)
+                {
+                    OnPropertyChanged(nameof(IsDocumentLoaded));
+                }
 
                 if (_currentDocumentType == DocumentType.PDF && _currentDocument is PDFDocumentWrapper pdfWrapper)
                 {

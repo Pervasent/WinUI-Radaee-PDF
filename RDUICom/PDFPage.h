@@ -17,7 +17,7 @@ namespace winrt::RDUILib::implementation
         }
         virtual ~PDFPage()
         {
-            Close();
+            //Close();
         }
         int64_t Handle()
         {
