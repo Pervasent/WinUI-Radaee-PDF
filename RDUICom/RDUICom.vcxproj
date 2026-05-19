@@ -266,7 +266,7 @@
     <Import Project="packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.targets" Condition="Exists('packages\Microsoft.ProjectReunion.Foundation.0.8.12\build\native\Microsoft.ProjectReunion.Foundation.targets')" />
     <Import Project="packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets" Condition="Exists('packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets')" />
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
-    <Import Project="..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets" Condition="Exists('..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets')" />
+    <Import Project="..\packages\RadaeePDF.Master.Native.1.0.1\build\native\RadaeePDF.Master.Native.targets" Condition="Exists('..\packages\RadaeePDF.Master.Native.1.0.1\build\native\RadaeePDF.Master.Native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -281,6 +281,6 @@
     <Error Condition="!Exists('packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.ProjectReunion.WinUI.0.8.12\build\native\Microsoft.ProjectReunion.WinUI.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.250303.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
-    <Error Condition="!Exists('..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RadaeePDF.Master.Native.1.0.0\build\native\RadaeePDF.Master.Native.targets'))" />
+    <Error Condition="!Exists('..\packages\RadaeePDF.Master.Native.1.0.1\build\native\RadaeePDF.Master.Native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RadaeePDF.Master.Native.1.0.1\build\native\RadaeePDF.Master.Native.targets'))" />
   </Target>
 </Project>

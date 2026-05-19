@@ -53,8 +53,6 @@ You must enable Developer Mode on Windows:
 
 In this case, we use **Nuget** for publishing and managing the native library files.
 
-To successfully extract the compressed native library, 7-zip is required on your local environment. 
-
 Before build the project, please restore the nuget packages first.
 
 ## clone the repository:
