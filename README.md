@@ -59,10 +59,6 @@ Before build the project, please restore the nuget packages first.
 
 ```powershell
 git clone git@github.com:RadaeePDF-Jugaad/RadaeePDF-Master-Windows-WinUI.git
-cd RadaeePDF-Master-Windows-WinUI
-
-# From now on, a normal pull will also download/update LFS files (.lib)
-git pull
 ```
 
 If you already cloned this repository in the past **without** correct nuget dependency added, please re-clone the repository and restore the nuget packages.
@@ -85,9 +81,6 @@ To quickly test the RadaeePDF SDK demo:
      ```bash
      # Standard git
      git pull
-     
-     # Using git-lts (if installed in your environment)
-     git-lts pull
      ```
 
 3. **Open the Solution**
