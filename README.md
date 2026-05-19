@@ -29,8 +29,9 @@ RadaeePDF SDK is designed to solve most developers' needs regard to PDF renderin
 Before running the demo, ensure you have the following installed:
 
 ### Visual Studio Requirements
-- **Visual Studio 2022** (or later) with the following workloads:
+- **Visual Studio 2022 Version 17.14.31** (or later) with the following workloads:
   - **WinUI desktop development** - Desktop development with WinUI 3 and C#, optionally for C++
+  - **NuGet Package Manager 6.14.3** or later
   - **Desktop development with C++** - With C++ (v143) tools for native components
   
 ### Windows SDK
@@ -44,24 +45,20 @@ You must enable Developer Mode on Windows:
 3. Enable **Developer Mode**
    - This allows you to install apps from any source, including loose files
 
-## Nuget package
-
-> **Note on Large Library Files**
-> The static library (`*.lib`) files in this repository are very large (several hundred MB each). This is because WinUI Release builds expand all inline functions during compilation, which significantly increases the instruction size and results in much larger static library files.
->
-> **Important:** These `*.lib` files are only required by the dynamic library project **RDUICom**. Once RDUICom is successfully built, it outputs normal-sized dynamic library files (`*.dll` and `*.winmd`) that are used by the application project **RadaeeWinUI**. When deploying your application, you do **not** need to include the large `*.lib` files—only the compiled `*.dll` and `*.winmd` files are required.
-
-In this case, we use **Nuget** for publishing and managing the native library files.
-
-Before build the project, please restore the nuget packages first.
-
 ## clone the repository:
 
 ```powershell
 git clone git@github.com:RadaeePDF-Jugaad/RadaeePDF-Master-Windows-WinUI.git
 ```
 
-If you already cloned this repository in the past **without** correct nuget dependency added, please re-clone the repository and restore the nuget packages.
+## Nuget package
+
+We use **Nuget** for publishing and managing the native library files for Radaee Master SDK.
+
+Important: before build the project, please restore the nuget packages first.
+
+If you already cloned the repository in the past **without** correct nuget dependency added, please do a "git pull" to synchronize the latest changes. But the safest way we suggest, is to re-clone the repository and restore the nuget packages.
+
 
 ## Quick Start - Run Demo
 
@@ -91,17 +88,17 @@ To quickly test the RadaeePDF SDK demo:
    - In the toolbar, set the platform to **x86** (or other platform based on your system)
    - Set the configuration to **Debug** or **Release**
 
-5. **Build library project**
+5. **Restore nuget packages**
+   - Right click on solution "RadeeWinUI" in solution explorer
+   - Select "Restore Nuget Packages" on poped up context menu
+
+6. **Build library project**
    - In solution explorer, right click on project "RDUICom" and select **Build**
    - Wait for the build to complete
 
-6. **Build and Run the Demo**
+7. **Build and Run the Demo**
    - Press **F5** or click the **Start** button (▶) to build and run the demo
    - The WinUI 3 application will launch on your local machine
-
-### Manual Installation
-
-1. Download the RadaeePDF SDK library from Git Repository
 
 ## Getting Started
 
