@@ -194,7 +194,7 @@ int pageCount = m_doc.PageCount;
 ### Navigate to a Specific Page
 
 ```csharp
-MainViewModel.GoToPage(5); // Go to page 5
+MainViewModel.GoToPage(5); // Go to page 6, the parameter page index is 0 based
 ```
 
 ### Set View Mode

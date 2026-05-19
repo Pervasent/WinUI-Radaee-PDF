@@ -49,7 +49,7 @@ namespace RadaeeWinUI.ViewModels
                 ViewMode.VerticalContinuous => CreateVerticalScrollView(),
                 ViewMode.HorizontalContinuous => CreateHorizontalScrollView(),
                 ViewMode.DualPage => CreateDualPageView(),
-                ViewMode.DualPageContinuous => CreateDualPageView(),
+                ViewMode.DualPageContinuous => CreateDualPageScrollView(),
                 _ => CreateVerticalScrollView()
             };
 
@@ -85,6 +85,14 @@ namespace RadaeeWinUI.ViewModels
         private DOCXDualPageView CreateDualPageView()
         {
             var view = new DOCXDualPageView();
+            view.SetRenderService(_renderService);
+            view.SetLayoutManager(_layoutManager);
+            return view;
+        }
+
+        private DOCXDualPageScrollView CreateDualPageScrollView()
+        {
+            var view = new DOCXDualPageScrollView();
             view.SetRenderService(_renderService);
             view.SetLayoutManager(_layoutManager);
             return view;

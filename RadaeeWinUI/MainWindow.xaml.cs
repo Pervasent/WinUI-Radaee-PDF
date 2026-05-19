@@ -295,7 +295,7 @@ namespace RadaeeWinUI
             if (ViewModel.CurrentDocumentType == DocumentType.PDF)
                 ViewModel.PDFViewModel.SwitchViewMode(ViewMode.DualPageContinuous);
             else if (ViewModel.CurrentDocumentType == DocumentType.DOCX)
-                ViewModel.DOCXViewModel.SwitchViewMode(ViewMode.DualPage);
+                ViewModel.DOCXViewModel.SwitchViewMode(ViewMode.DualPageContinuous);
         }
 
         private void Outline_Click(object sender, RoutedEventArgs e)

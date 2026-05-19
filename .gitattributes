@@ -1,2 +1,0 @@
-*.lib filter=lfs diff=lfs merge=lfs -text
-RDUICom/.vs/RDUICom/v17/Browse.VC.db filter=lfs diff=lfs merge=lfs -text
