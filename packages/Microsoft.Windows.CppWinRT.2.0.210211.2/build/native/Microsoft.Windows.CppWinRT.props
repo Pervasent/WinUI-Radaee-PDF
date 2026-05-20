@@ -13,16 +13,17 @@ Copyright (C) Microsoft Corporation. All rights reserved.
     </PropertyGroup>
 
     <PropertyGroup>
+        <PreferredToolArchitecture>x64</PreferredToolArchitecture>
         <CanReferenceWinRT>true</CanReferenceWinRT>
         <CppWinRTPackage Condition="'$(CppWinRTEnabled)' != 'true'">true</CppWinRTPackage>
         <CppWinRTPackage Condition="'$(CppWinRTPackage)' != 'true'">false</CppWinRTPackage>
-        <XamlLanguage Condition="'$(XamlLanguage)' == ''">CppWinRT</XamlLanguage>
+        <XamlLanguage>CppWinRT</XamlLanguage>
         <IsNativeLanguage>true</IsNativeLanguage>
         <!-- This causes VS to add the platform WinMD references for the target SDK -->
         <WinMDAssembly>true</WinMDAssembly>
         <!--Set a value to prevent SDK's uap.props from setting it and pointing to the wrong headers-->
         <CppWinRT_IncludePath>PreventSdkUapPropsAssignment</CppWinRT_IncludePath>
-        <CppWinRTEnableDefaultCopyLocalFalse Condition="'$(CppWinRTEnableDefaultCopyLocalFalse)' == ''">true</CppWinRTEnableDefaultCopyLocalFalse>
+        <CppWinRTEnableDefaultCopyLocalFalse Condition="'$(CppWinRTEnableDefaultCopyLocalFalse)' == ''"></CppWinRTEnableDefaultCopyLocalFalse>
     </PropertyGroup>
 
     <ItemDefinitionGroup>
@@ -42,7 +43,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
             <InterfaceIdentifierFileName Condition="'%(Midl.InterfaceIdentifierFileName)'==''">nul</InterfaceIdentifierFileName>
             <ProxyFileName Condition="'%(Midl.ProxyFileName)'==''">nul</ProxyFileName>
             <TypeLibraryName Condition="'%(Midl.TypeLibraryName)'==''"></TypeLibraryName>
-            <NoMidl Condition="'%(Midl.NoMidl)'==''">true</NoMidl>
         </Midl>
         <ProjectReference Condition="'$(XamlLanguage)' != 'C++' and '$(CppWinRTEnableDefaultCopyLocalFalse)' == 'true'">
             <!-- By default, for a C++/WinRT project,
@@ -60,7 +60,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
     <ItemGroup>
         <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\CppWinrtRules.Project.xml"/>
-        <ProjectCapability Include="CppWinRT" />
     </ItemGroup>
 
 </Project>
