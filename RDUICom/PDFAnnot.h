@@ -309,6 +309,7 @@ namespace winrt::RDUILib::implementation
             }
             return -1;
         }
+        uint64_t ObjRef() { return PDF_Page_getAnnotRef(m_page, m_hand); }
         RDUILib::RDPath InkPath();
         void InkPath(RDUILib::RDPath path)
         {

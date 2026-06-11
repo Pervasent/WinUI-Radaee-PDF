@@ -20,3 +20,5 @@ RadaeeWinUI/.vs/
 lib/
 nuget/
 output/
+
+packages/

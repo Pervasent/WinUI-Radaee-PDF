@@ -65,6 +65,7 @@ namespace RDUILib
         Boolean Hide{ get; set; };
         Int32 Icon{ get; set; };
         Int32 IndexInPage{ get; };
+        UInt64 ObjRef{ get; };
         RDPath InkPath{ get; set; };
         Boolean Is3D{ get; };
         Boolean IsAttachment{ get; };
