@@ -23,6 +23,10 @@
     <EnableMsixTooling>true</EnableMsixTooling>
 
     <WindowsPackageType>MSIX</WindowsPackageType>
+    <WindowsAppSdkDeploymentManagerInitialize>false</WindowsAppSdkDeploymentManagerInitialize>
+    <WindowsAppSdkBootstrapInitialize>true</WindowsAppSdkBootstrapInitialize>
+    <WindowsAppSDKBootstrapAutoInitializeOptions_OnPackageIdentity_NOOP>true</WindowsAppSDKBootstrapAutoInitializeOptions_OnPackageIdentity_NOOP>
+    <WindowsAppSdkUndockedRegFreeWinRTInitialize>true</WindowsAppSdkUndockedRegFreeWinRTInitialize>
 
     <Nullable>enable</Nullable>
 

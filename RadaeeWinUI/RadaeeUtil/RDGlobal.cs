@@ -12,12 +12,26 @@ namespace RadaeeWinUI.RadaeeUtil
 {
     public sealed class RDGlobal
     {
+        static private string GetInstalledPath()
+        {
+            try
+            {
+                return AppContext.BaseDirectory.TrimEnd('\\');
+                //return Package.Current.InstalledLocation.Path;
+            }
+            catch
+            {
+                // Unpackaged mode: Package.Current is not available
+                return AppContext.BaseDirectory.TrimEnd('\\');
+            }
+        }
+
         static private bool ms_loaded = false;
         static private void load_data()
         {
             if (ms_loaded) return;
             ms_loaded = true;
-            String inst_path = Package.Current.InstalledLocation.Path;
+            String inst_path = GetInstalledPath();
             String cmap_path = inst_path + "\\Assets\\dat\\cmaps.dat";
             String umap_path = inst_path + "\\Assets\\dat\\umaps.dat";
             String cmyk_path = inst_path + "\\Assets\\dat\\cmyk_rgb.dat";
