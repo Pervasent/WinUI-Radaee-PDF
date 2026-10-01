@@ -76,6 +76,13 @@ namespace winrt::RDUILib::implementation
         {
             return PDF_Document_save(m_doc);
         }
+        winrt::hstring GetMeta(winrt::hstring tag)
+        {
+            char* ctag = cvt_str_cstr(tag);
+            winrt::hstring ret = PDF_Document_getMeta(m_doc, ctag);
+            free(ctag);
+            return ret;
+        }
         bool SetMeta(winrt::hstring tag, winrt::hstring val)
         {
             char* ctag = cvt_str_cstr(tag);

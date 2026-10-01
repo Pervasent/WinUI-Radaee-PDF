@@ -62,6 +62,7 @@ namespace RDUILib
         Boolean Save();
         Boolean SaveAs(String path);
         Boolean SaveAs(String path, UInt8[] opts, Single img_dpi);
+        String GetMeta(String tag);
         Boolean SetMeta(String tag, String val);
         Boolean SetPageRotate(Int32 pageno, Int32 degree);
     }
